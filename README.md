@@ -6,6 +6,7 @@ Claude dominates by a large margin.
 Notes: this data is unreliable because:
 - The Github Search API returns duplicate commits over forks and copied (not forked) repos
 - The huge fluctation for Claude shows that the underlying DB of Github does not scale well
+Ideally, Github would give us a way to retrieve deduplicated commits
 
 However, it gives trends.
 
