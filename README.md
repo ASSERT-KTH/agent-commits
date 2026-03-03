@@ -12,3 +12,8 @@ However, it gives trends.
 
 See also https://github.com/tdegueul/what-are-they-doing
 
+### GraphQL
+
+GitHub's GraphQL API doesn't expose commit search directly. 
+The GraphQL `search` type supports issues, PRs, repos, and users but not commits.
+So the unreliable REST call is the only tool for the global count.
