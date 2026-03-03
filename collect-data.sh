@@ -11,7 +11,7 @@ track_agent() {
 
   COUNT=$(curl -s "https://api.github.com/search/commits?q=%22$AGENT%22&per_page=1" \
     -H "Accept: application/vnd.github.cloak-preview" \
-    | jq '.total_count')
+    | tee "$DIR/data/${AGENT}_${TIMESTAMP}.json" | jq '.total_count')
 
   echo "$TIMESTAMP, $COUNT" >> "$DIR/${AGENT}_commits.csv"
   echo "$AGENT: $COUNT"
@@ -36,6 +36,7 @@ track_agent "devin%40cognition.ai"
 track_agent "cursor%40anysphere.io"
 
 cd ~/commits-agents/
+git add data/*json
 git commit -m "automated commit" --author="monperrus-bot <monperrus-bot@monperrus.com>" -a
 git push origin main
 
