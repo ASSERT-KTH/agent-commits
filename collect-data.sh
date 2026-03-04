@@ -9,7 +9,7 @@ track_agent() {
   mkdir -p "$DIR/html/$AGENT"
   curl -s -o "$DIR/html/$AGENT/html-${TIMESTAMP}.html" "$URL"
 
-  COUNT=$(curl -s "https://api.github.com/search/commits?q=%22$AGENT%22+committer-date%3A%3C%3D${TIMESTAMP}&per_page=100&sort=committer-date" \
+  COUNT=$(curl -s "https://api.github.com/search/commits?q=%22$AGENT%22+author-date%3A2020-01-01..${TIMESTAMP}&per_page=100&sort=author-date" \
     -H "Accept: application/vnd.github.cloak-preview" \
     | tee "$DIR/data/${AGENT}_${TIMESTAMP}.json" | jq '.total_count')
 
