@@ -1,5 +1,5 @@
 #!/bin/bash
-TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+TIMESTAMP=$(date -u '+%Y-%m-%d')
 
 track_agent() {
   local AGENT="$1"
