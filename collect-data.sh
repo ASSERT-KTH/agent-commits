@@ -1,5 +1,6 @@
 #!/bin/bash
-TIMESTAMP=$(date -u '+%Y-%m-%d')
+TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+DATE=$(date -u '+%Y-%m-%d')
 
 track_agent() {
   local AGENT="$1"
@@ -9,7 +10,7 @@ track_agent() {
   mkdir -p "$DIR/html/$AGENT"
   curl -s -o "$DIR/html/$AGENT/html-${TIMESTAMP}.html" "$URL"
 
-  COUNT=$(curl -s "https://api.github.com/search/commits?q=%22$AGENT%22+author-date%3A2020-01-01..${TIMESTAMP}&per_page=100&sort=author-date" \
+  COUNT=$(curl -s "https://api.github.com/search/commits?q=%22$AGENT%22+author-date%3A2020-01-01..${DATE}&per_page=100&sort=author-date" \
     -H "Accept: application/vnd.github.cloak-preview" \
     | tee "$DIR/data/${AGENT}_${TIMESTAMP}.json" | jq '.total_count')
 
