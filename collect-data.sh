@@ -5,7 +5,7 @@ DATE=$(date -u '+%Y-%m-%d')
 track_agent() {
   local AGENT="$1"
   local URL="https://github.com/search?q=%22$AGENT%22&type=commits"
-  local DIR=./
+  local DIR=~/commits-agents/
 
   mkdir -p "$DIR/html/$AGENT"
   curl -s -o "$DIR/html/$AGENT/html-${TIMESTAMP}.html" "$URL"
