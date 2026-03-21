@@ -13,13 +13,23 @@ track_agent() {
   local URL="https://github.com/search?q=%22$AGENT%22&type=commits"
   local DIR="/home/martin/commits-agents"
 
+  local JSON_FILE="$DIR/data/${AGENT}_${TIMESTAMP}.json"
+
   mkdir -p "$DIR/html/$AGENT"
   curl -s -H "Authorization: token $GITHUB_TOKEN" -o "$DIR/html/$AGENT/html-${TIMESTAMP}.html" "$URL"
 
-  COUNT=$(curl -s "https://api.github.com/search/commits?q=%22$AGENT%22+author-date%3A2020-01-01..${DATE}&per_page=100&sort=author-date" \
+  curl -s "https://api.github.com/search/commits?q=%22$AGENT%22+author-date%3A2020-01-01..${DATE}&per_page=100&sort=author-date" \
     -H "Accept: application/vnd.github.cloak-preview" \
     -H "Authorization: token $GITHUB_TOKEN" \
-    | tee "$DIR/data/${AGENT}_${TIMESTAMP}.json" | jq '.total_count')
+    -o "$JSON_FILE"
+
+  if grep -q "You have exceeded a secondary rate limit" "$JSON_FILE"; then
+    echo "Rate limit exceeded for $AGENT, deleting $JSON_FILE"
+    rm "$JSON_FILE"
+    return
+  fi
+
+  COUNT=$(jq '.total_count' "$JSON_FILE")
 
   echo "$TIMESTAMP, $COUNT" >> "$DIR/${AGENT}_commits.csv"
   echo "$AGENT: $COUNT"
