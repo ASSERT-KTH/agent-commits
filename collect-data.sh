@@ -8,6 +8,8 @@ fi
 TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
 DATE=$(date -u '+%Y-%m-%d')
 
+NEW_DATA_POINTS=0
+
 track_agent() {
   local AGENT="$1"
   local URL="https://github.com/search?q=%22$AGENT%22&type=commits"
@@ -33,6 +35,7 @@ track_agent() {
 
   echo "$TIMESTAMP, $COUNT" >> "$DIR/${AGENT}_commits.csv"
   echo "$AGENT: $COUNT"
+  NEW_DATA_POINTS=$((NEW_DATA_POINTS + 1))
 }
 
 # Anthropic / Claude
