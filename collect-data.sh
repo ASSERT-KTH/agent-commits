@@ -11,7 +11,7 @@ DATE=$(date -u '+%Y-%m-%d')
 track_agent() {
   local AGENT="$1"
   local URL="https://github.com/search?q=%22$AGENT%22&type=commits"
-  local DIR="/home/martin/commits-agents"
+  local DIR="$SCRIPT_DIR"
 
   local JSON_FILE="$DIR/data/${AGENT}_${TIMESTAMP}.json"
 
@@ -53,7 +53,7 @@ track_agent "devin%40cognition.ai"
 # Cursor
 track_agent "cursor%40anysphere.io"
 
-cd /home/martin/commits-agents/
+cd "$SCRIPT_DIR"
 git add data/*json
 git commit -m "automated commit" --author="monperrus-bot <monperrus-bot@monperrus.com>" -a
 git push origin main
