@@ -58,6 +58,6 @@ track_agent "cursor%40anysphere.io"
 
 cd "$SCRIPT_DIR"
 git add data/*json
-git commit -m "automated commit" --author="monperrus-bot <monperrus-bot@monperrus.com>" -a
+git commit -m "automated commit ($NEW_DATA_POINTS new data points)" --author="monperrus-bot <monperrus-bot@monperrus.com>" -a
 git push origin main
 
