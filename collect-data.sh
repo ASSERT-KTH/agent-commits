@@ -46,6 +46,7 @@ track_agent() {
   echo "$TIMESTAMP, $COUNT" >> "$DIR/${AGENT}_commits.csv"
   echo "$AGENT: $COUNT (+$DIFF)"
   NEW_DATA_POINTS=$((NEW_DATA_POINTS + DIFF))
+  sleep 1
 }
 
 # Anthropic / Claude
