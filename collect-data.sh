@@ -4,6 +4,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$SCRIPT_DIR/.env" ]; then
   export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
 fi
+env | grep GITHUB
 
 TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
 DATE=$(date -u '+%Y-%m-%d')
@@ -61,7 +62,7 @@ track_agent "gemini-code-assist%40google.com"
 
 # Cognition / Devin
 #track_agent "devin%40cognition.ai"
-track-agent "devin-ai-integration[bot]"
+track_agent "devin-ai-integration[bot]"
 # Cursor
 #track_agent "cursor%40anysphere.io"
 track_agent "cursoragent%40cursor.com"
