@@ -34,21 +34,12 @@ track_agent() {
 
   COUNT=$(jq '.total_count' "$JSON_FILE")
 
-  PREVIOUS_COUNT=$(tail -n 1 "$DIR/${AGENT}_commits.csv" 2>/dev/null | cut -d',' -f2 | tr -d ' ')
-  if [ -z "$PREVIOUS_COUNT" ]; then
-    PREVIOUS_COUNT=0
-  fi
-  DIFF=$((COUNT - PREVIOUS_COUNT))
-  if [ $DIFF -lt 0 ]; then
-    DIFF=0
-  fi
-
   echo "$TIMESTAMP, $COUNT" >> "$DIR/${AGENT}_commits.csv"
-  echo "$AGENT: $COUNT (+$DIFF)"
-  NEW_DATA_POINTS=$((NEW_DATA_POINTS + DIFF))
-  sleep 1
+  DATA_POINTS=$(jq '.items | length' "$JSON_FILE")
+  NEW_DATA_POINTS=$((NEW_DATA_POINTS+DATA_POINTS))
+  sleep 5
 }
-
+NEW_DATA_POINTS=0
 # Anthropic / Claude
 track_agent "noreply%40anthropic.com"
 
