@@ -20,7 +20,7 @@ track_agent() {
   mkdir -p "$DIR/html/$AGENT"
   curl -s -H "Authorization: token $GITHUB_TOKEN" -o "$DIR/html/$AGENT/html-${TIMESTAMP}.html" "$URL"
 
-  curl -s "https://api.github.com/search/commits?q=%22$AGENT%22+author-date%3A2020-01-01..${DATE}&per_page=100&sort=author-date" \
+  curl -s "https://api.github.com/search/commits?q=%22$AGENT%22+author-date%3A2020-01-01..${DATE}&per_page=100&sort=author-date&incomplete_results=True" \
     -H "Accept: application/vnd.github.cloak-preview" \
     -H "Authorization: token $GITHUB_TOKEN" \
     -o "$JSON_FILE"
@@ -60,10 +60,11 @@ track_agent "copilot%40users.noreply.github.com"
 track_agent "gemini-code-assist%40google.com"
 
 # Cognition / Devin
-track_agent "devin%40cognition.ai"
-
+#track_agent "devin%40cognition.ai"
+track-agent "devin-ai-integration[bot]"
 # Cursor
-track_agent "cursor%40anysphere.io"
+#track_agent "cursor%40anysphere.io"
+track_agent "cursoragent%40cursor.com"
 
 cd "$SCRIPT_DIR"
 git add data/*json
