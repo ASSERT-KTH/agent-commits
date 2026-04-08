@@ -61,6 +61,6 @@ track_agent "cursoragent%40cursor.com"
 
 cd "$SCRIPT_DIR"
 git add data/*json
-git commit -m "automated commit ($NEW_DATA_POINTS new data points)" --author="monperrus-bot <monperrus-bot@monperrus.com>" -a
+git commit -m "automated commit ($NEW_DATA_POINTS new data points)" --author="assert-bot <castor-bot@eecs.kth.se>" -a
 git push origin main
 
