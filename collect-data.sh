@@ -4,10 +4,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$SCRIPT_DIR/.env" ]; then
   export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
 fi
-env | grep GITHUB
 
 TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
 DATE=$(date -u '+%Y-%m-%d')
+
+# Stay silent for cron, but leave a trace and don't commit when the token is dead
+# (the classic PAT expired on 2026-07-07 and the script committed nulls for months)
+if ! curl -sf -o /dev/null -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/rate_limit; then
+  echo "$TIMESTAMP GITHUB_TOKEN rejected, nothing collected" >> "$SCRIPT_DIR/collect.log"
+  exit 1
+fi
 
 NEW_DATA_POINTS=0
 
@@ -32,7 +38,12 @@ track_agent() {
     return
   fi
 
-  COUNT=$(jq '.total_count' "$JSON_FILE")
+  COUNT=$(jq '.total_count // empty' "$JSON_FILE" 2>/dev/null)
+  if [ -z "$COUNT" ]; then
+    echo "$TIMESTAMP $AGENT: invalid response, deleting $JSON_FILE" >> "$DIR/collect.log"
+    rm "$JSON_FILE"
+    return
+  fi
 
   echo "$TIMESTAMP, $COUNT" >> "$DIR/${AGENT}_commits.csv"
   DATA_POINTS=$(jq '.items | length' "$JSON_FILE")
@@ -60,7 +71,10 @@ track_agent "devin-ai-integration[bot]"
 track_agent "cursoragent%40cursor.com"
 
 cd "$SCRIPT_DIR"
-git add data/*json
+[ "$NEW_DATA_POINTS" -gt 0 ] || exit 0
+# Only the CSVs: raw JSON is ~2 MB per run (67 GB by Sep 2026) and stays local,
+# data/*json stopped being committed in April 2026 when the glob exceeded ARG_MAX
+git add -- '*_commits.csv'
 git commit -m "automated commit ($NEW_DATA_POINTS new data points)" --author="assert-bot <castor-bot@eecs.kth.se>" -a
 git push origin main
 
